@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="style.css">
+        <title>c-asm</title>
+    </head>
+    <body>
+        <main>
+            <aside>
+                <button onclick="window.location.href='https://github.com/undefined06855/c-asm/blob/9b045d23a2561d55e5233f2489bec414d03d2428/README.md'">Open Docs</button>
+                <hr/>
+                <button onclick="runType = 'normal'; startInterpret()">Run</button>
+                <button onclick="runType = 'step';   startInterpret()" id="stepbtn">Step</button>
+                <button onclick="runType = 'stop'">Stop</button>
+                <hr/>
+                <button onclick="downloadFile()">Download</button>
+                <button onclick="importFile()">Import</button>
+                <hr/>
+                <button onclick="document.getElementById('log').innerText = ''">Clear log</button>
+                <hr/>
+                <div id="log"></div>
+            </aside>
+            <textarea spellcheck="false"></textarea>
+        </main>
+
+        <script src="scripts/vars.js"></script>
+        <script src="scripts/instructions.js"></script>
+
+        <script src="scripts/functions.js"></script>
+        <script src="scripts/interpreter.js"></script>
+        <script src="scripts/main.js"></script>
+    </body>
+</html>
