@@ -6,7 +6,11 @@
     font-size: 25px;
 }
 
-main {
+.hidden {
+    display: none !important;
+}
+
+#wrapper {
     /* flex for 1d, grid for 2d */
     display: flex;
     flex-direction: row;
@@ -25,16 +29,29 @@ aside {
     border-right: 4px solid rgb(27, 27, 27);
 }
 
-textarea {
-    resize: none;
-    background-color: rgb(60, 60, 60);
+main {
     flex: 1 auto;
+    position: relative;
+}
+
+main > * {
+    position: absolute;
+    top: 0;
+    left: 0;
+
+    width: 100%;
+    height: 100%;
+}
+
+textarea {
+    background-color: rgb(60, 60, 60);
     white-space: pre;
     overflow-wrap: normal;
     overflow-x: scroll;
+    resize: none;
 }
 
-html, body, main {
+html, body, #wrapper {
     width: 100%;
     height: 100%;
     overflow: hidden;
@@ -69,5 +86,82 @@ button {
 }
 
 hr {
+    align-self: center;
     width: 70%;
+}
+
+canvas {
+    width: 100%;
+    height: 100%;
+    image-rendering: pixelated;
+    background-color: white;
+}
+
+#instructionList {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    bottom: 20px;
+    right: 20px;
+
+    background-color: rgb(55, 55, 55);
+
+    border: 3px solid rgb(27, 27, 27);
+    border-radius: 5px;
+
+    display: flex;
+    flex-direction: column;
+
+    overflow-y: scroll;
+
+    gap: 5px;
+
+    padding: 5px;
+    padding-left: 20px;
+}
+
+#instructionList > * {
+    margin-bottom: 4px;
+}
+
+#instructionList > *:not(.code):not(.sectionTitle) {
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    margin-left: 25px;
+}
+
+.code {
+    background-color: rgb(70, 70, 70);
+    display: inline;
+    width: auto;
+    margin-right: auto;
+    padding: 2px;
+    border-radius: 3px;
+}
+
+h2, .code {
+    font-size: large;
+}
+
+h1 {
+    font-size: larger;
+}
+
+p {
+    font-size: medium;
+}
+
+#instructionExitBtn {
+    user-select: none;
+    
+    position: fixed;
+    top: 17px;
+    right: 17px;
+
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
