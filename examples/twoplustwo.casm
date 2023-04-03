@@ -1,0 +1,11 @@
+ldv a
+set 2
+
+ldv b
+set 2
+
+ldv a
+addv b
+
+logv
+end

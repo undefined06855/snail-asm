@@ -1,0 +1,29 @@
+canvas
+clr
+setsize 360 1
+
+ldv zero
+set 0
+
+ldv x
+set 0
+
+ldv saturation
+set 100
+
+ldv lightness
+set 50
+
+ldv x
+jmp main
+
+.main
+    add 1
+    setcolhslv x saturation lightness
+    spxv x zero
+    jls main 360
+    jmp endl
+
+.endl
+    jmp endl
+

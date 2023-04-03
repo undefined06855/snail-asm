@@ -1,0 +1,79 @@
+canvas
+clr
+ldv WIDTH
+set 16
+ldv HEIGHT
+set 16
+setsizev WIDTH HEIGHT
+
+ldv x
+setv WIDTH
+div 2
+
+ldv y
+setv HEIGHT
+div 2
+
+ldv key
+setc key
+
+ldv lastkey
+set 0
+
+.main
+    ldv key
+    jgr pollkeys 0
+    jmp main2
+
+.draw
+    clr
+    spxv x y
+    jmp main
+
+
+.pollkeys
+    ldv key
+    jeq up 38
+    jeq left 37
+    jeq down 40
+    jeq right 39
+    
+    ldv lastkey
+    jeq up 38
+    jeq left 37
+    jeq down 40
+    jeq right 39
+    
+    logv
+    end
+
+.up
+    ldv lastkey
+    set 38
+    ldv y
+    sub 1
+    jmp draw
+    
+.left
+    ldv lastkey
+    set 37
+    ldv x
+    sub 1
+    jmp draw
+    
+.down
+    ldv lastkey
+    set 40
+    ldv y
+    add 1
+    jmp draw
+
+.right
+    ldv lastkey
+    set 39
+    ldv x
+    add 1
+    jmp draw
+
+
+

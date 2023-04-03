@@ -1,0 +1,34 @@
+ldv a
+set 1
+ldv b
+set 1
+ldv c
+set 0
+
+ldv counter
+set 10
+
+log 1
+log 1
+
+jmp main
+
+.main
+    ldv c
+    addv a b
+    logv c
+    
+    ldv a
+    setv b
+    ldv b
+    setv c
+    
+    ldv counter
+    sub 1
+    
+    jgr main 0
+    jmp end
+
+.end
+    log END
+    end
