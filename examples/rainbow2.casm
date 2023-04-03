@@ -22,6 +22,8 @@ jmp main
     setcolhslv x saturation lightness
     spxv x zero
     jls main 360
+
+    endtime
     jmp endl
 
 .endl
