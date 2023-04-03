@@ -23,7 +23,7 @@ const INSTRUCTION_LIST = {
     },
     log: {
         desc: "Logs a string.",
-        params: "<string>",
+        params: "...<string>",
         run: (params, line) => {
             return new Promise(resolve => {
                 log(params.join(" "))
@@ -48,6 +48,15 @@ const INSTRUCTION_LIST = {
             return new Promise(resolve => {
                 log(loadedVar)
                 resolve("NONE")
+            })
+        }
+    },
+    end: {
+        desc: "Ends the program.",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                resolve("END")
             })
         }
     },
@@ -94,29 +103,39 @@ const INSTRUCTION_LIST = {
     addv: {
         desc: "Adds two variables and puts the result in the loaded variable",
         params: "<variable> <variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = variables[params[0]] + variables[params[1]]; resolve("VARCHANGE")})}
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Number(variables[params[0]]) + Number(variables[params[1]]); resolve("VARCHANGE")})}
     },
     subv: {
         desc: "Subtracts two variables and puts the result in the loaded variable",
         params: "<variable> <variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = variables[params[0]] - variables[params[1]]; resolve("VARCHANGE")})}
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Number(variables[params[0]]) - Number(variables[params[1]]); resolve("VARCHANGE")})}
     },
     mulv: {
         desc: "Multiplies two variables and puts the result in the loaded variable",
         params: "<variable> <variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = variables[params[0]] * variables[params[1]]; resolve("VARCHANGE")})}
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Number(variables[params[0]]) * Number(variables[params[1]]); resolve("VARCHANGE")})}
     },
     divv: {
         desc: "Divides two variables and puts the result in the loaded variable",
         params: "<variable> <variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = variables[params[0]] * variables[params[1]]; resolve("VARCHANGE")})}
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Number(variables[params[0]]) * Number(variables[params[1]]); resolve("VARCHANGE")})}
+    },
+    jmp: {
+        desc: "Jumps to another part of the code.",
+        params: "<subroutine>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                pointer = jump(params[0])
+                resolve("CHANGELINE")
+            })
+        }
     },
     jeq: {
         desc: "Jumps if the loaded variable equals a value.",
         params: "<subroutine> <number>",
         run: (params, line) => {
             return new Promise(resolve => {
-                if (variables[loadedVar] == params[1])
+                if (variables[loadedVar] == Number(params[1]))
                 {
                     pointer = jump(params[0])
                     resolve("CHANGELINE")
@@ -130,7 +149,7 @@ const INSTRUCTION_LIST = {
         params: "<subroutine> <number>",
         run: (params, line) => {
             return new Promise(resolve => {
-                if (variables[loadedVar] < params[1])
+                if (variables[loadedVar] < Number(params[1]))
                 {
                     pointer = jump(params[0])
                     resolve("CHANGELINE")
@@ -144,7 +163,7 @@ const INSTRUCTION_LIST = {
         params: "<subroutine> <number>",
         run: (params, line) => {
             return new Promise(resolve => {
-                if (variables[loadedVar] > params[1])
+                if (variables[loadedVar] > Number(params[1]))
                 {
                     pointer = jump(params[0])
                     resolve("CHANGELINE")
@@ -159,7 +178,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 stack.push(line)
-                pointer = jump(params[0])
+                pointer = jump(Number(params[0]))
                 resolve("CHANGELINE")
             })
         }
@@ -175,16 +194,132 @@ const INSTRUCTION_LIST = {
             })
         }
     },
-    end: {
-        desc: "Ends the program.",
+    canvas: {
+        desc: "Enables the canvas.",
         params: "",
         run: (params, line) => {
             return new Promise(resolve => {
-                resolve("END")
+                canvas.style.display = "block"
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    clr: {
+        desc: "Clears the canvas.",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height)
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    setsize: {
+        desc: "Sets the width and height of the canvas.",
+        params: "<number> <number>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                canvas.width = params[0]
+                canvas.height = params[1]
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    setsizev: {
+        desc: "Sets the width and height of the canvas to the values of two variables.",
+        params: "<variables> <variables>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                canvas.width = variables[params[0]]
+                canvas.height = variables[params[1]]
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    setcolrgbv: {
+        desc: "Sets the current pixel color to the values of three variables in RGB.",
+        params: "<variable> <variable> <variable>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillStyle = "rgb(" + variables[params[0]] + ", " + variables[params[1]] + ", " + variables[params[2]] + ")"
+                resolve("NONE")
+            })
+        }
+    },
+    setcolrgb: {
+        desc: "Sets the current pixel color in RGB.",
+        params: "<number> <number> <number>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillStyle = "rgb(" + params[0] + ", " + params[1] + ", " + params[2] + ")"
+                resolve("NONE")
+            })
+        }
+    },
+    setcolhslv: {
+        desc: "Sets the current pixel color to the values of three variables in HSL.",
+        params: "<variable> <variable> <variable>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillStyle = "hsl(" + variables[params[0]] + ", " + variables[params[1]] + "%, " + variables[params[2]] + "%)"
+                resolve("NONE")
+            })
+        }
+    },
+    setcolhsl: {
+        desc: "Sets the current pixel color in HSL.",
+        params: "<number> <number> <number>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillStyle = "hsl(" + params[0] + ", " + params[1] + "%, " + params[2] + "%)"
+                resolve("NONE")
+            })
+        }
+    },
+    spx: {
+        desc: "Sets a pixel on the screen.",
+        params: "<number> <number>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillRect(params[0], params[1], 1, 1)
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    spxv: {
+        desc: "Sets the coordinate of two variables' pixel on the screen.",
+        params: "<variable> <variable>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillRect(variables[params[0]], variables[params[1]], 1, 1)
+                resolve("SCREENUPDATE")
             })
         }
     }
 }
+
+const INSTRUCTION_GROUPS = [
+    {
+        name: "Generic",
+        from: "jmp",
+        to: "end"
+    },
+    {
+        name: "Math",
+        from: "set",
+        to: "divv"
+    },
+    {
+        name: "Jumps",
+        from: "jeq",
+        to: "rts"
+    },
+    {
+        name: "Canvas",
+        from: "canvas",
+        to: "spxv"
+    }
+]
 
 function jump(name)
 {
@@ -193,9 +328,11 @@ function jump(name)
     {
         if (line.startsWith("." + name))
         {
-            return lineNum
+            return lineNum - 1
         }
 
         lineNum++
     }
+
+    return pointer
 }

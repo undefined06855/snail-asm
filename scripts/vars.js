@@ -13,3 +13,6 @@ let variables = {}
 
   , runType = "normal"
   , interpreting = false
+
+  , canvas = document.querySelector("canvas")
+  , ctx = canvas.getContext("2d")

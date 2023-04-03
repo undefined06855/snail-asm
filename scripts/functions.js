@@ -19,6 +19,18 @@ function lowerInstruction(str) {
     return words.join(" ");
 }
 
+// chatGPT
+
+function startsWithAnyElement(str, lst) {
+    for (let i = 0; i < lst.length; i++) {
+        const trimmedElem = lst[i].trim(); // remove whitespace before the element
+        if (str.trim().startsWith(trimmedElem)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function downloadFile()
 {
     const startFileName = prompt("Filename:")
@@ -42,22 +54,71 @@ function importFile() {
     const fileInput = document.createElement('input');
     fileInput.type = 'file';
     fileInput.accept = '.casm';
-  
+
     fileInput.addEventListener('change', function() {
-      const file = fileInput.files[0];
-      const reader = new FileReader();
-  
-      reader.addEventListener('load', function() {
-        textarea.value = reader.result;
-      });
-  
-      reader.readAsText(file);
+        const file = fileInput.files[0];
+        const reader = new FileReader();
+
+        reader.addEventListener('load', function() {
+            textarea.value = reader.result;
+        });
+
+        reader.readAsText(file);
     });
-  
+
     fileInput.click();
 }
 
 function log(text)
 {
     document.getElementById("log").innerText += "\n" + text
+    console.log(text)
+}
+
+function openList()
+{
+    let list = document.getElementById("instructionList")
+    let exitBtn = document.getElementById("instructionExitBtn")
+
+    list.classList.toggle("hidden")
+    exitBtn.classList.toggle("hidden")
+}
+
+
+// this function was made by DT on discord - thanks!
+// it converts a template string to an html element
+// like so:
+/*
+
+el`div#id.class1.class2`(
+    el`p`("Hello world!")
+).$({ tabIndex: 1, style: "background: red" })
+
+makes
+
+<div id=​"id" class=​"class1 class2" tabindex=​"1" style=​"background:​ red;​">​<p>​Hello world!​</p>​</div>​
+*/
+function el(...args) {
+    let a = String.template(...args)
+    let tag = a.replace(/[#\.][^#\.]+/gm, "").trimEnd().trimStart()
+    let id = a.match(/[#][^#\.]+/gm)
+    let classes = a.match(/[\.][^#\.]+/gm)
+    let elem = document.createElement(tag)
+    if (id) elem.id = id.join(" ").replaceAll("#","")
+    if (classes) elem.className = classes.join(" ").replaceAll(".","")
+    elem.$ = function(props) {
+        for (const [k,v] of Object.entries(props) ) {
+            elem[k]=v
+        }
+        return elem
+    }
+    return function(...e) {
+        elem.append(...e)
+        return elem
+    }
+}
+String.template = (...args) => {
+    let ret = ``
+    for (const part of args) { ret += part }
+    return ret
 }

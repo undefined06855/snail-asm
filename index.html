@@ -6,16 +6,15 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
-        <title>c-asm</title>
+        <title>c-asm 1.1</title>
     </head>
     <body>
-        <main>
+        <div id="wrapper">
             <aside>
-                <button onclick="window.location.href='https://github.com/undefined06855/c-asm/blob/main/README.md'">Open Docs</button>
+                <button onclick="openList()">Open Instructions List</button>
                 <hr/>
-                <button onclick="runType = 'normal'; startInterpret()">Run</button>
-                <button onclick="runType = 'step';   startInterpret()" id="stepbtn">Step</button>
-                <button onclick="runType = 'stop'">Stop</button>
+                <button onclick="runType = 'normal'; startInterpret()" id="runbtn">Run</button>
+                <button onclick="runType = 'stop'"                     id="stopbtn" disabled>Stop</button>
                 <hr/>
                 <button onclick="downloadFile()">Download</button>
                 <button onclick="importFile()">Import</button>
@@ -24,8 +23,14 @@
                 <hr/>
                 <div id="log"></div>
             </aside>
-            <textarea spellcheck="false"></textarea>
-        </main>
+            <main>
+                <textarea spellcheck="false"></textarea>
+                <canvas width="80" height="80" style="display: none;"></canvas>
+            </main>
+        </div>
+
+        <div id="instructionList" class="hidden menu"></div>
+        <div id="instructionExitBtn" onclick="openList()" class="hidden">x</div>
 
         <script src="scripts/vars.js"></script>
         <script src="scripts/instructions.js"></script>

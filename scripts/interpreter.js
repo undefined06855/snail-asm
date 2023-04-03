@@ -1,5 +1,6 @@
 function startInterpret()
 {
+    canvas.style.display = "none"
     variables = {}
     pointer = 0
     stack = []
@@ -21,7 +22,8 @@ function startInterpret()
 
     if (runType == "normal")
     {
-        document.getElementById("stepbtn").disabled = true
+        document.getElementById("runbtn").disabled = true
+        document.getElementById("stopbtn").disabled = false
         console.time("PRGM")
     }
     requestAnimationFrame(cycle)
@@ -34,7 +36,9 @@ function cycle()
         console.error("UNEXPECTED EOF WHILE RUNNING")
         interpreting = false
         runType = "stop"
-        document.getElementById("stepbtn").disabled = false
+        canvas.style.display = "none"
+        document.getElementById("runbtn").disabled = false
+        document.getElementById("stopbtn").disabled = true
     }
     else
     {
@@ -42,24 +46,21 @@ function cycle()
         let instruction = instructionFull[0]
         let params = instructionFull.splice(1)
     
-        if (!instruction.startsWith("."))
+        if (!(instruction.startsWith(".") || INSTRUCTION_LIST[instruction] === undefined))
         {
-            INSTRUCTION_LIST[instruction].run(params, pointer).then(ret => {
-                if (ret != "END")
+            INSTRUCTION_LIST[instruction]
+            .run(params, pointer)
+            .then(ret => {
+                pointer++
+                if (runType == "stop" || ret == "END")
                 {
-                    pointer++
-                    if (runType == "stop")
-                    {
-                        interpreting = false
-                        document.getElementById("stepbtn").disabled = false
-                        console.timeEnd("PRGM")
-                    }
-                    if (runType == "normal") requestAnimationFrame(cycle)
-                }
-                else
-                {
+                    interpreting = false
+                    document.getElementById("runbtn").disabled = false
+                    document.getElementById("stopbtn").disabled = true
+                    canvas.style.display = "none"
                     console.timeEnd("PRGM")
                 }
+                else if (runType == "normal") requestAnimationFrame(cycle)
             })
         }
         else
