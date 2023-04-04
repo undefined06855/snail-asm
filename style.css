@@ -77,12 +77,21 @@ button {
     cursor: pointer;
 }
 
+.normalbtn {
+    width: auto;
+    height: auto;
+    padding: 14px;
+}
+
 #log {
     flex: 1 auto;
+    overflow-y: scroll;
+}
+
+#log, #logtop {
     text-align: left;
     width: 70%;
     font-size: 16px;
-    overflow-y: scroll;
 }
 
 hr {
@@ -97,7 +106,21 @@ canvas {
     background-color: white;
 }
 
-#instructionList {
+@media screen and (orientation:portrait) {
+    .square {
+        height: auto;
+        aspect-ratio: 1 / 1;
+    }
+}
+
+@media screen and (orientation:landscape) {
+    .square {
+        width: auto;
+        aspect-ratio: 1 / 1;
+    }
+}
+
+.menu {
     position: fixed;
     top: 20px;
     left: 20px;
@@ -150,7 +173,7 @@ p {
     font-size: medium;
 }
 
-#instructionExitBtn {
+.exitBtn {
     user-select: none;
     
     position: fixed;

@@ -6,12 +6,14 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="stylesheet" href="style.css">
-        <title>c-asm 1.1</title>
+        <title>snail-asm 1.2</title>
     </head>
     <body>
         <div id="wrapper">
             <aside>
                 <button onclick="openList()">Open Instructions List</button>
+                <!--button onclick="openSettings()">Open Settings</button-->
+                <button onclick="window.location.href = 'https\:\/\/github.com/undefined06855/snail-asm/tree/main/examples'">Open examples</button>
                 <hr/>
                 <button onclick="runType = 'normal'; startInterpret()" id="runbtn">Run</button>
                 <button onclick="runType = 'stop'"                     id="stopbtn" disabled>Stop</button>
@@ -21,6 +23,7 @@
                 <hr/>
                 <button onclick="document.getElementById('log').innerText = ''">Clear log</button>
                 <hr/>
+                <div id="logtop"></div>
                 <div id="log"></div>
             </aside>
             <main>
@@ -30,7 +33,12 @@
         </div>
 
         <div id="instructionList" class="hidden menu"></div>
-        <div id="instructionExitBtn" onclick="openList()" class="hidden">x</div>
+        <div id="instructionExitBtn" onclick="openList()" class="hidden exitBtn">x</div>
+
+        <!--div id="settings" class="hidden menu">
+            <h1>Settings</h1>
+        </div>
+        <div id="settingsExitBtn" onclick="openSettings()" class="hidden exitBtn">x</div-->
 
         <script src="scripts/vars.js"></script>
         <script src="scripts/instructions.js"></script>

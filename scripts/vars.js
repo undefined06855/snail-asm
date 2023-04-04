@@ -10,9 +10,24 @@ let variables = {}
   , stack = []
   , instructions = textarea.value.split("\n")
   , loadedVar = ""
+  , currentPauseId = -1
 
   , runType = "normal"
   , interpreting = false
 
   , canvas = document.querySelector("canvas")
   , ctx = canvas.getContext("2d")
+
+  , builtInVariables = {
+      key: null,
+      time: null,
+      pointer: null,
+      stacklen: null,
+      variablesLength: null
+  }
+
+  , startTime = 0
+  , endTime = 0
+
+  , instructionMenuOpen = false
+  , settingsMenuOpen = false
