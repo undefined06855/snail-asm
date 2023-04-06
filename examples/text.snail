@@ -1,0 +1,49 @@
+canvas
+setsize 400 400
+setsquare
+clr
+
+ldv f
+setc time
+
+fnt 12px sans-serif
+txt 12 12 This is a text test!
+txt 12 24 You can even do different colours
+setcolrgb 0 255 0
+txt 192 24 like this!
+
+setcolhsl 10 100 50
+fnt 23px cursive
+txt 3 40 and even different sizes and fonts!
+
+setcolrgb 0 0 0
+fnt 12px monospace
+txt 10 70 Syntax:
+fnt 16px monospace
+txt 0 90 txt <x:number> <y:number> ...<text:string>
+
+endtime
+
+fnt 50px cursive
+.endloop
+    ldv fslow
+    setv f
+    div 100
+    
+    ldv saturation
+    set 100
+    
+    ldv value
+    set 50
+    
+    setcolhslv fslow saturation value
+    rect 10 150 380 100
+    
+    ldv finverse
+    setv f
+    add 180
+    
+    setcolhslv finverse saturation value
+    txt 10 200 It's that easy!
+    
+    jmp endloop
