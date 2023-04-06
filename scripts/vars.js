@@ -12,6 +12,8 @@ let variables = {}
   , loadedVar = ""
   , currentPauseId = -1
 
+  , stoppedTimer = false
+
   , runType = "normal"
   , interpreting = false
 

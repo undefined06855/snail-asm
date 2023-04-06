@@ -138,3 +138,26 @@ String.template = (...args) => {
     for (const part of args) { ret += part }
     return ret
 }
+
+function resetVars()
+{
+    canvas.style.display = "none"
+    canvas.classList.remove("square")
+    variables = {}
+    builtInVariables = {
+        key: null,
+        time: null,
+        pointer: null,
+        stacklen: null,
+        variableslength: null
+    }
+
+    pointer = 0
+    stack = []
+    loadedVar = ""
+    currentPauseId = -1
+
+    interpreting = true
+
+    stoppedTimer = false
+}
