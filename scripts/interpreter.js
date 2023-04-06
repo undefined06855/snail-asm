@@ -1,23 +1,6 @@
 function startInterpret()
 {
-    canvas.style.display = "none"
-    canvas.style.width = ""
-    canvas.style.aspectRatio = ""
-    variables = {}
-    builtInVariables = {
-        key: null,
-        time: null,
-        pointer: null,
-        stacklen: null,
-        variableslength: null
-    }
-
-    pointer = 0
-    stack = []
-    loadedVar = ""
-    currentPauseId = -1
-
-    interpreting = true
+    resetVars()
 
     logTop("Running...")
 
@@ -48,12 +31,7 @@ function cycle()
     if (pointer == instructions.length)
     {
         logTop("UNEXPECTED EOF WHILE RUNNING")
-        startTime = 0
-        endTime = 0
-        interpreting = false
-        runType = "stop"
-        canvas.style.display = "none"
-        canvas.classList.remove("square")
+        resetVars()
         document.getElementById("runbtn").disabled = false
         document.getElementById("stopbtn").disabled = true
     }
@@ -84,8 +62,13 @@ function cycle()
                         canvas.style.display = "none"
                     }
 
-                    endTime = Date.now()
-                    logTop(`Time taken: ${endTime - startTime}ms`)
+                    if (!stoppedTimer)
+                    {
+                        endTime = Date.now()
+                        logTop(`Time taken: ${endTime - startTime}ms`)
+                    }
+
+                    if (ret == "ENDTIME") stoppedTimer = true
 
                     // carry onto next instruction if only time ended
                     if (ret == "ENDTIME") requestAnimationFrame(cycle)

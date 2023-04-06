@@ -170,6 +170,16 @@ const INSTRUCTION_LIST = {
         params: "<variable1:variable> <variable2:variable>",
         run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Number(variables[params[0]]) * Number(variables[params[1]]); resolve("VARCHANGE")})}
     },
+    sin: {
+        desc: "Gets the sine of a variable and puts the result in the loaded variable.",
+        params: "<variable:variable>",
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Math.sin(Number(variables[params[0]])); resolve("VARCHANGE")})}
+    },
+    cos: {
+        desc: "Gets the cosine of a variable and puts the result in the loaded variable.",
+        params: "<variable:variable>",
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Math.cos(Number(variables[params[0]])); resolve("VARCHANGE")})}
+    },
     jmp: {
         desc: "Jumps to another part of the code.",
         params: "<routine:subroutine>",
@@ -414,6 +424,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 ctx.fillRect(Number(params[0]), Number(params[1]), Number(params[2]), Number(params[3]))
+                resolve("SCREENUPDATE")
             })
         }
     },
@@ -423,6 +434,57 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 ctx.fillRect(variables[params[0]], variables[params[1]], variables[params[2]], variables[params[3]])
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    fnt: {
+        desc: "Defines a font to be used when drawing text.",
+        params: "...<font:string>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.font = params.join(" ")
+                resolve("NONE")
+            })
+        }
+    },
+    txt: {
+        desc: "Draws text to the screen.",
+        params: "<x:number> <y:number> ...<text:string>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillText(params.splice(2).join(" "), Number(params[0]), Number(params[1]))
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    txtv: {
+        desc: "Draws text to the screen using variables as coordinates.",
+        params: "<x:variable> <y:variable> ...<text:string>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillText(params.splice(2).join(" "), Number(variables[params[0]]), Number(variables[params[1]]))
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    ntxt: {
+        desc: "Draws a variable's value to the screen.",
+        params: "<x:number> <y:number> <value:variable>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillText(variables[params[2]], Number(params[0]), Number(params[1]))
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    ntxtv: {
+        desc: "Draws a variable's value to the screen using variables as coordinates.",
+        params: "<x:variable> <y:variable> <value:variable>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillText(variables[params[2]], Number(variables[params[0]]), Number(variables[params[1]]))
+                resolve("SCREENUPDATE")
             })
         }
     }
