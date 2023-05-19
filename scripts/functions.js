@@ -158,6 +158,7 @@ function resetVars()
     currentPauseId = -1
 
     interpreting = true
+    fast = false
 
     stoppedTimer = false
 }

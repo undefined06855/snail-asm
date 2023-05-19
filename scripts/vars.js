@@ -15,6 +15,7 @@ let variables = {}
   , stoppedTimer = false
 
   , runType = "normal"
+  , fast = false
   , interpreting = false
 
   , canvas = document.querySelector("canvas")

@@ -81,6 +81,29 @@ const INSTRUCTION_LIST = {
             })
         }
     },
+    fast: {
+        desc: "Switches the program to fast mode, which runs every instruction without causing a new frame. Make sure to include upd instructions, else your program may crash!",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                fast = true
+                resolve("NONE")
+            })
+        }
+    },
+    upd: {
+        desc: "Updates the window. Only used in fast mode, see the fast instruction.",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                let nextInstruction = () => {
+                    resolve("NONE")
+                }
+
+                requestAnimationFrame(nextInstruction)
+            })
+        }
+    },
     end: {
         desc: "Ends the program.",
         params: "",
@@ -489,7 +512,6 @@ const INSTRUCTION_LIST = {
         }
     }
 }
-
 
 const INSTRUCTION_GROUPS = [
     {
