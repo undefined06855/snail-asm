@@ -73,7 +73,9 @@ function cycle()
                     // carry onto next instruction if only time ended
                     if (ret == "ENDTIME") requestAnimationFrame(cycle)
                 }
-                else if (runType == "normal") requestAnimationFrame(cycle)
+
+                else if (runType == "normal" && fast) cycle()
+                else if (runType == "normal" && !fast) requestAnimationFrame(cycle)
             })
         }
         else if (INSTRUCTION_LIST[instruction] === undefined && !(instruction.startsWith(".") || instruction.startsWith(";")))
@@ -81,13 +83,16 @@ function cycle()
             logTop(`UNKNOWN INSTRUCTION: ${instruction}`)
             pointer++ // ignore instruction
             builtInVariables.pointer ? variables[builtInVariables.pointer] = pointer : ""
-            requestAnimationFrame(cycle)
+
+            if (fast) cycle()
+            else requestAnimationFrame(cycle)
         }
         else
         {
             pointer++ // ignore instruction
             builtInVariables.pointer ? variables[builtInVariables.pointer] = pointer : ""
-            requestAnimationFrame(cycle)
+            if (fast) cycle()
+            else requestAnimationFrame(cycle)
         }
     }
 }
