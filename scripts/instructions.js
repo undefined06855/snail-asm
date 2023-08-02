@@ -82,7 +82,7 @@ const INSTRUCTION_LIST = {
         }
     },
     fast: {
-        desc: "Switches the program to fast mode, which runs every instruction without causing a new frame. Make sure to include upd instructions, else your program may crash!",
+        desc: "Switches the program to fast mode, which runs every instruction without causing a new frame. Make sure to include upd instructions, else your program may freeze!",
         params: "",
         run: (params, line) => {
             return new Promise(resolve => {
