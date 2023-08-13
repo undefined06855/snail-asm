@@ -52,6 +52,7 @@ document.addEventListener("keydown", event => {
     if (event.code == "F5" || event.code == "F6")
     {
         event.preventDefault()
+        runType = "normal"
         startInterpret()
     }
 })

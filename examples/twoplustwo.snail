@@ -1,11 +1,6 @@
+1.6
 ldv a
-set 2
+set 2 << this ĆtĒaĎoĉ
 
-ldv b
-set 2
-
-ldv a
-addv b
-
-logv
-end
+ĀĂbąćĉċčďđēćĒbĘĚ
+adāăģăįıtęğĜogĂČ lĺ ğend

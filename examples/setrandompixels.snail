@@ -1,37 +1,7 @@
-canvas
-setsquare
-clr
-ldv WIDTH
-set 10
-ldv HEIGHT
-set 10
-setsizev WIDTH HEIGHT
-ldv cx
-set 0
-ldv cy
-set 0
-.setrand
-    ldv RAND
-    rand 2
-    jeq skipset 1
-    spxv cx cy
-.skipset
-    ldv cx
-    jlsv skipinc WIDTH
-    set -1
-    ldv cy
-    add 1
-.skipinc
-    ldv cy
-    jeqv finish HEIGHT
-    ldv cx
-    add 1
-    jmp setrand
-
-.finish
-    endtime
-    log --END--
-
-.endloop
-    jmp endloop
-    
+1.6
+fast
+canvā
+setsquareĄlr
+ldv WIDTHĊČ 10ėę HEIGHTġtģĥċčizeĚĜĞHĨĪĬĮĘĚcxį ĥŀ cyńĥ.ĳrĆd
+ œ ŇRANDŒŔŏnd 2śœjeq skipĳģŢŧpxŁxňŊōũūČŮŇłŮjlsĚŨŪincěĝğŮŬ-1źħŉŮadşƍŶƃƅƎŁŊŔ ŤqĚfƄishļīĭƙňŃƜƒƔŽmpŧČŝő
+.ơnƣhŮeŞtimēƶƽdloopŮupőƜjư ǄǆǈŮ
