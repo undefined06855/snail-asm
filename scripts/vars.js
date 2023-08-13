@@ -36,6 +36,11 @@ let variables = {} // object with variables in
     stacklen: "The length of the stack.",
     variableslen: "How many variables have been set a value."
   }
+  , builtInVariableDescriptions = {
+    key: "The last key that was pressed on the keyboard, as a keycode.",
+    time: "The current millisecond of program execution",
+    pointer: "The program "
+  }
 
   , startTime = 0 // program start time
   , endTime = 0 //   "     " end time

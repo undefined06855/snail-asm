@@ -115,5 +115,3 @@ function interpretError(errorCode)
     document.getElementById("runbtn").disabled = false
     document.getElementById("stopbtn").disabled = true
 }
-
-
