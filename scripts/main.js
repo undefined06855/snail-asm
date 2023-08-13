@@ -4,7 +4,7 @@ textarea.addEventListener("keydown", event => {
     {
         if (event.code == "Enter")
         {
-            const exitKeywords = ["rts", "jmp"]
+            const exitKeywords = ["rts", "jmp", "end"]
 
             if (getLastLineUserWasOn().charAt(0) == ".")
             {
