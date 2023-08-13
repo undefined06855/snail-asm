@@ -30,10 +30,7 @@ function cycle()
 {
     if (pointer == instructions.length)
     {
-        logTop("UNEXPECTED EOF WHILE RUNNING")
-        resetVars()
-        document.getElementById("runbtn").disabled = false
-        document.getElementById("stopbtn").disabled = true
+        interpretError("ERR_EOF")
     }
     else
     {
@@ -47,10 +44,13 @@ function cycle()
             .run(params, pointer)
             .then(ret => {
                 pointer++
-                builtInVariables.pointer ? variables[builtInVariables.pointer] = pointer : ""
-                builtInVariables.time ? variables[builtInVariables.time] = Date.now() - startTime : ""
-                builtInVariables.stacklen ? variables[builtInVariables.stacklen] = stack.length : ""
+
+                builtInVariables.pointer ? variables[builtInVariables.pointer] = pointer                          : ""
+                builtInVariables.time ? variables[builtInVariables.time] = Date.now() - startTime                 : ""
+                builtInVariables.stacklen ? variables[builtInVariables.stacklen] = stack.length                   : ""
                 builtInVariables.variablesLength ? variables[builtInVariables.variablesLength] = variables.length : ""
+
+                // error handling is done by the instruction, only the EOF error is handled by the cycle function
 
                 if (runType == "stop" || ret == "END" || ret == "ENDTIME")
                 {
@@ -78,7 +78,7 @@ function cycle()
                 else if (runType == "normal" && !fast) requestAnimationFrame(cycle)
             })
         }
-        else if (INSTRUCTION_LIST[instruction] === undefined && !(instruction.startsWith(".") || instruction.startsWith(";")))
+        else if (INSTRUCTION_LIST[instruction] === undefined && !(instruction.startsWith(".")))
         {
             logTop(`UNKNOWN INSTRUCTION: ${instruction}`)
             pointer++ // ignore instruction
@@ -89,7 +89,7 @@ function cycle()
         }
         else
         {
-            pointer++ // ignore instruction
+            pointer++ // ignore instruction (it is a subroutine)
             builtInVariables.pointer ? variables[builtInVariables.pointer] = pointer : ""
             if (fast) cycle()
             else requestAnimationFrame(cycle)
@@ -97,6 +97,16 @@ function cycle()
     }
 }
 
+// update builtInVariable "key"
 document.addEventListener("keydown", event => {
     builtInVariables.key ? variables[builtInVariables.key] = event.which : ""
 })
+
+
+function interpretError(errorCode)
+{
+    logTop(errorCodes[errorCode])
+    resetVars()
+    document.getElementById("runbtn").disabled = false
+    document.getElementById("stopbtn").disabled = true
+}

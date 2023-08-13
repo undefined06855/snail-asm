@@ -9,6 +9,15 @@ const INSTRUCTION_LIST = {
             })
         }
     },
+    nop: {
+        desc: "This does nothing. Can be used to increase pointer or delay by a small amount.",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                resolve("NONE")
+            })
+        }
+    },
     pse: {
         desc: "Pauses the program for some amount of milliseconds.",
         params: "<time:number>",
@@ -78,6 +87,16 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 resolve("ENDTIME")
+            })
+        }
+    },
+    clearlog: {
+        desc: "Clears the log.",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                document.getElementById("log").innerText = ""
+                resolve("NONE")
             })
         }
     },
@@ -174,34 +193,99 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {return new Promise(resolve => {variables[loadedVar] /= Number(params[0]); resolve("VARCHANGE")})}
     },
     addv: {
-        desc: "Adds two variables and puts the result in the loaded variable.",
-        params: "<variable1:variable> <variable2:variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Number(variables[params[0]]) + Number(variables[params[1]]); resolve("VARCHANGE")})}
+        desc: "Adds the loaded variable to another variable.",
+        params: "<variable:variable>",
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] += variables[params[0]]; resolve("VARCHANGE")})}
     },
     subv: {
-        desc: "Subtracts two variables and puts the result in the loaded variable.",
-        params: "<variable1:variable> <variable2:variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Number(variables[params[0]]) - Number(variables[params[1]]); resolve("VARCHANGE")})}
+        desc: "Subtracts the loaded variable by another variable.",
+        params: "<variable:variable>",
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] -= variables[params[0]]; resolve("VARCHANGE")})}
     },
     mulv: {
-        desc: "Multiplies two variables and puts the result in the loaded variable.",
-        params: "<variable1:variable> <variable2:variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Number(variables[params[0]]) * Number(variables[params[1]]); resolve("VARCHANGE")})}
+        desc: "Multiplies the loaded variable by another variable.",
+        params: "<variable:variable>",
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] *= variables[params[0]]; resolve("VARCHANGE")})}
     },
     divv: {
-        desc: "Divides two variables and puts the result in the loaded variable.",
-        params: "<variable1:variable> <variable2:variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Number(variables[params[0]]) * Number(variables[params[1]]); resolve("VARCHANGE")})}
+        desc: "Divides the loaded variable by another variable.",
+        params: "<variable:variable>",
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] /= variables[params[0]]; resolve("VARCHANGE")})}
     },
     sin: {
         desc: "Gets the sine of a variable and puts the result in the loaded variable.",
         params: "<variable:variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Math.sin(Number(variables[params[0]])); resolve("VARCHANGE")})}
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Math.sin(variables[params[0]]); resolve("VARCHANGE")})}
     },
     cos: {
         desc: "Gets the cosine of a variable and puts the result in the loaded variable.",
         params: "<variable:variable>",
-        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Math.cos(Number(variables[params[0]])); resolve("VARCHANGE")})}
+        run: (params, line) => {return new Promise(resolve => {variables[loadedVar] = Math.cos(variables[params[0]]); resolve("VARCHANGE")})}
+    },
+    pow: {
+        desc: "Puts the currently loaded variable to the power of a value",
+        params: "<power:number>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                variables[loadedVar] **= Number(params[0])
+                resolve("VARCHANGE")
+            })
+        }
+    },
+    powv: {
+        desc: "Puts the currently loaded variable to the power of another variable",
+        params: "<power:variable>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                variables[loadedVar] **= variables[params[0]]
+                resolve("VARCHANGE")
+            })
+        }
+    },
+    round: {
+        desc: "Rounds the currently loaded variable to the nearest whole number.",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                variables[loadedVar] = Math.round(variables[loadedVar])
+            })
+        }
+    },
+    floor: {
+        desc: "Rounds down the currently loaded variable to the nearest whole number.",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                variables[loadedVar] = Math.floor(variables[loadedVar])
+            })
+        }
+    },
+    ceil: {
+        desc: "Rounds up the currently loaded variable to the nearest whole number.",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                variables[loadedVar] = Math.floor(variables[loadedVar])
+            })
+        }
+    },
+    sqrt: {
+        desc: "Gets the square root of the currently loaded variable",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                variables[loadedVar] = Math.sqrt(variables[loadedVar])
+            })
+        }
+    },
+    abs: {
+        desc: "Gets the absolute of the currently loaded variable",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                variables[loadedVar] = Math.abs(variables[loadedVar])
+            })
+        }
     },
     jmp: {
         desc: "Jumps to another part of the code.",
@@ -313,6 +397,10 @@ const INSTRUCTION_LIST = {
         params: "",
         run: (params, line) => {
             return new Promise(resolve => {
+                if (stack.length == 0) 
+                {
+                    // error somehow
+                }
                 pointer = stack[stack.length - 1]
                 stack.pop()
                 resolve("CHANGELINE")
@@ -486,7 +574,7 @@ const INSTRUCTION_LIST = {
         params: "<x:variable> <y:variable> ...<text:string>",
         run: (params, line) => {
             return new Promise(resolve => {
-                ctx.fillText(params.splice(2).join(" "), Number(variables[params[0]]), Number(variables[params[1]]))
+                ctx.fillText(params.splice(2).join(" "), variables[params[0]], variables[params[1]])
                 resolve("SCREENUPDATE")
             })
         }
@@ -506,7 +594,7 @@ const INSTRUCTION_LIST = {
         params: "<x:variable> <y:variable> <value:variable>",
         run: (params, line) => {
             return new Promise(resolve => {
-                ctx.fillText(variables[params[2]], Number(variables[params[0]]), Number(variables[params[1]]))
+                ctx.fillText(variables[params[2]], variables[params[0]], variables[params[1]])
                 resolve("SCREENUPDATE")
             })
         }

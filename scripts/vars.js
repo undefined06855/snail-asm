@@ -28,9 +28,17 @@ let variables = {}
       stacklen: null,
       variablesLength: null
   }
+  , builtInVariableDescriptions = {
+    key: "The last key that was pressed on the keyboard, as a keycode.",
+    time: "The current millisecond of program execution",
+    pointer: "The program "
+  }
 
   , startTime = 0
   , endTime = 0
 
   , instructionMenuOpen = false
-  , settingsMenuOpen = false
+  , errorCodes = {
+    ERR_EOF: "UNEXPECTED EOF WHILE RUNNING",
+    ERR_STACK: "STACK EMPTY WHEN RTS INSTRUCTION CALLED"
+  }
