@@ -90,16 +90,6 @@ function openList()
     exitBtn.classList.toggle("hidden")
 }
 
-function openSettings()
-{
-    settingsMenuOpen = !settingsMenuOpen
-    let list = document.getElementById("settings")
-    let exitBtn = document.getElementById("settingsExitBtn")
-
-    list.classList.toggle("hidden")
-    exitBtn.classList.toggle("hidden")
-}
-
 
 // this function was made by DT on discord - thanks!
 // it converts a template string to an html element
@@ -114,27 +104,9 @@ makes
 
 <div id=​"id" class=​"class1 class2" tabindex=​"1" style=​"background:​ red;​">​<p>​Hello world!​</p>​</div>​
 */
-function el(...args) {
-    let a = String.template(...args)
-    let tag = a.replace(/[#\.][^#\.]+/gm, "").trimEnd().trimStart()
-    let id = a.match(/[#][^#\.]+/gm)
-    let classes = a.match(/[\.][^#\.]+/gm)
-    let elem = document.createElement(tag)
-    if (id) elem.id = id.join(" ").replaceAll("#","")
-    if (classes) elem.className = classes.join(" ").replaceAll(".","")
-    elem.$ = function(props) {
-        for (const [k,v] of Object.entries(props) ) {
-            elem[k]=v
-        }
-        return elem
-    }
-    return function(...e) {
-        elem.append(...e)
-        return elem
-    }
-}
+function el(...args) {let a=String.template(...args),t=a.replace(/[#\.][^#\.]+/gm,"").trimEnd().trimStart(),i=a.match(/[#][^#\.]+/gm),c=a.match(/[\.][^#\.]+/gm),l=document.createElement(t);if(i)l.i=i.join(" ").replaceAll("#","");if(c)l.className=c.join(" ").replaceAll(".","");l.$=function(p){for(const[k,v]of Object.entries(p)){l[k]=v}return l};return function(...e){l.append(...e);return l}}
 String.template = (...args) => {
-    let ret = ``
+    let ret = ""
     for (const part of args) { ret += part }
     return ret
 }
@@ -144,13 +116,15 @@ function resetVars()
     canvas.style.display = "none"
     canvas.classList.remove("square")
     variables = {}
-    builtInVariables = {
+    
+    // resets some values of builtInVariables
+    Object.assign(builtInVariables, {
         key: null,
         time: null,
         pointer: null,
         stacklen: null,
         variableslength: null
-    }
+    })
 
     pointer = 0
     stack = []

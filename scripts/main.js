@@ -1,4 +1,5 @@
 textarea.addEventListener("keydown", event => {
+    // typing helper
     if (!event.repeat)
     {
         if (event.code == "Enter")
@@ -38,16 +39,26 @@ textarea.addEventListener("keydown", event => {
 })
 
 document.addEventListener("keydown", event => {
+    if (event.repeat) return // trying to implement things like this
+        
     if (event.code == "Escape")
     {
         event.preventDefault()
-        if (settingsMenuOpen) openSettings()
+        // close any open menus
         if (instructionMenuOpen) openList()
+    }
+
+    // start interpret
+    if (event.code == "F5" || event.code == "F6")
+    {
+        event.preventDefault()
+        startInterpret()
     }
 })
 
 let list = document.getElementById("instructionList")
 
+// add instruction list
 let currentGroupId = 0
 for (const name of Object.keys(INSTRUCTION_LIST))
 {
