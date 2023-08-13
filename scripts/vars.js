@@ -13,7 +13,7 @@ let variables = {} // object with variables in
   , loadedVar = "" // currently loaded var's name
   , currentPauseId = -1 // used by pse to put the timeout id in
 
-  , stoppedTimer = false // has used endtimer yet?
+  , timerStopped = false // has used endtimer yet?
 
   , runType = "normal" // run type (normal / stop)
   , fast = false // is fast mode on?
@@ -43,6 +43,6 @@ let variables = {} // object with variables in
   , instructionMenuOpen = false // is instructions menu open?
   , errorCodes = { // error codes
     ERR_EOF: "UNEXPECTED EOF WHILE RUNNING",
-    ERR_STACK: "STACK EMPTY WHEN RTS INSTRUCTION CALLED",
+    ERR_STACK: "STACK EMPTY WHEN TRYING TO RETURN OR POP",
     ERR_SUBROUTINE: "SUBROUTINE NOT FOUND"
   }

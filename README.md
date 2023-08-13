@@ -5,5 +5,5 @@ The list of instructions has been moved to inside the website.
 
 Comments can be placed anywhere, as long as they're not on a new line, or after any instruction that doesn't have a set number of parameters (`log` etc); any unexpected parameters after a instruction are discarded.
 
-Version 1.5:
- * Added multiple math-related instructions, cleaned up code.
+Version 1.6:
+ * Fixed some stuff, old scripts will not be compatible with the new version! Disabled examples button.

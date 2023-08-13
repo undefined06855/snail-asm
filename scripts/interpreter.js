@@ -51,13 +51,13 @@ function cycle()
                 builtInVariables.pointer ? variables[builtInVariables.pointer] = pointer                          : ""
                 builtInVariables.time ? variables[builtInVariables.time] = Date.now() - startTime                 : ""
                 builtInVariables.stacklen ? variables[builtInVariables.stacklen] = stack.length                   : ""
-                builtInVariables.variableslen ? variables[builtInVariables.variableslen] = variables.length : ""
+                builtInVariables.variableslen ? variables[builtInVariables.variableslen] = variables.length       : ""
 
                 // error handling is done by the instruction, only the EOF error is handled by the cycle function
 
-                if (runType == "stop" || ret == "END" || ret == "ENDTIME")
+                if (runType == "stop" || ret == "END" || ret == "FORCEEND" || ret == "ENDTIME")
                 {
-                    if (ret == "END" || runType == "stop")
+                    if (ret == "END" || ret == "FORCEEND" || runType == "stop")
                     {
                         interpreting = false
                         document.getElementById("runbtn").disabled = false
@@ -65,13 +65,14 @@ function cycle()
                         canvas.style.display = "none"
                     }
 
-                    if (!stoppedTimer)
+                    // when using forceend, time taken should not show up
+                    if (!timerStopped && ret != "FORCEEND")
                     {
                         endTime = Date.now()
                         logTop(`Time taken: ${endTime - startTime}ms`)
                     }
 
-                    if (ret == "ENDTIME") stoppedTimer = true
+                    if (ret == "ENDTIME") timerStopped = true
 
                     // carry onto next instruction if only time ended
                     if (ret == "ENDTIME") requestAnimationFrame(cycle)

@@ -152,5 +152,5 @@ function resetVars()
     interpreting = true
     fast = false
 
-    stoppedTimer = false
+    timerStopped = false
 }

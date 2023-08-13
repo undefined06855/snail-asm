@@ -12,7 +12,7 @@
         <div id="wrapper">
             <aside>
                 <button onclick="openList()">Open Instructions List</button>
-                <button onclick="window.open('https\:\/\/github.com\/undefined06855\/snail-asm\/tree\/main\/examples', '_blank')">Open examples</button>
+                <button onclick="window.open('https\:\/\/github.com\/undefined06855\/snail-asm\/tree\/main\/examples', '_blank')" disabled>Open examples</button>
                 <hr/>
                 <button onclick="runType = 'normal'; startInterpret()" id="runbtn">Run</button>
                 <button onclick="runType = 'stop'"                     id="stopbtn" disabled>Stop</button>
@@ -33,10 +33,6 @@
 
         <div id="instructionList" class="hidden menu"></div>
         <div id="instructionExitBtn" onclick="openList()" class="hidden exitBtn">x</div>
-
-        <script>
-
-        </script>
 
         <script src="scripts/vars.js"></script>
         <script src="scripts/instructions.js"></script>

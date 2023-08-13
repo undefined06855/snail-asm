@@ -22,6 +22,10 @@
     font-family: var(--font) !important;
 }
 
+:disabled {
+    cursor: default;
+}
+
 #wrapper {
     /* flex for 1d, grid for 2d */
     display: flex;
