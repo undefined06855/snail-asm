@@ -75,7 +75,7 @@ function importFile() {
             let [version, ...content] = reader.result.split("\n")
             let loadOld = true
 
-            if (Number(version) < Number(VERSION)) loadOld = prompt("This script was made for an older version of snail. Load anyway?")
+            if (Number(version) < Number(VERSION)) loadOld = confirm("This script was made for an older version of snail. Load anyway?")
             
             if (loadOld) textarea.value = de(content.join("\n"));
         });
