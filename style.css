@@ -6,8 +6,24 @@
     font-size: 25px;
 }
 
+:root {
+    --font: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
 .hidden {
     display: none !important;
+}
+
+.inline {
+    display: inline-block !important;
+}
+
+.font {
+    font-family: var(--font) !important;
+}
+
+:disabled {
+    cursor: default;
 }
 
 #wrapper {
@@ -148,7 +164,7 @@ canvas {
 }
 
 #instructionList > *:not(.code):not(.sectionTitle) {
-    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: var(--font);
     margin-left: 25px;
 }
 

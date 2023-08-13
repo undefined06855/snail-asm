@@ -71,7 +71,7 @@ const INSTRUCTION_LIST = {
         }
     },
     setc: {
-        desc: "Sets the currently loaded variable to be a built in value which updates every instruction.",
+        desc: "Sets the currently loaded variable to be a built in value which updates every instruction.\nThe possible values can be:",
         params: "<builtinvalue:string>",
         run: (params, line) => {
             return new Promise(resolve => {
@@ -111,7 +111,7 @@ const INSTRUCTION_LIST = {
         }
     },
     upd: {
-        desc: "Updates the window. Only used in fast mode, see the fast instruction.",
+        desc: "Updates the window. Only used in fast mode, see the fast instruction for more information.",
         params: "",
         run: (params, line) => {
             return new Promise(resolve => {
@@ -132,6 +132,8 @@ const INSTRUCTION_LIST = {
             })
         }
     },
+
+
     set: {
         desc: "Sets the loaded variable to a value.",
         params: "<value:number>",
@@ -192,6 +194,7 @@ const INSTRUCTION_LIST = {
         params: "<value:number>",
         run: (params, line) => {return new Promise(resolve => {variables[loadedVar] /= Number(params[0]); resolve("VARCHANGE")})}
     },
+
     addv: {
         desc: "Adds the loaded variable to another variable.",
         params: "<variable:variable>",
@@ -248,6 +251,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.round(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
@@ -257,6 +261,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.floor(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
@@ -266,6 +271,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.floor(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
@@ -275,6 +281,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.sqrt(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
@@ -284,9 +291,12 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.abs(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
+
+
     jmp: {
         desc: "Jumps to another part of the code.",
         params: "<routine:subroutine>",
@@ -399,7 +409,8 @@ const INSTRUCTION_LIST = {
             return new Promise(resolve => {
                 if (stack.length == 0) 
                 {
-                    // error somehow
+                    interpretError("ERR_STACK")
+                    resolve("FORCEEND")
                 }
                 pointer = stack[stack.length - 1]
                 stack.pop()
@@ -407,6 +418,43 @@ const INSTRUCTION_LIST = {
             })
         }
     },
+    pop: {
+        desc: "Pops the most recent address off of the stack.",
+        params: "",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                if (stack.length == 0) 
+                {
+                    interpretError("ERR_STACK")
+                    resolve("FORCEEND")
+                }
+                stack.pop()
+                resolve("NONE")
+            })
+        }
+    },
+    stk: {
+        desc: "Adds a line number to the stack.",
+        params: "<line:number>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                stack.push(Number(params[0]))
+                resolve("NONE")
+            })
+        }
+    },
+    stkv: {
+        desc: "Adds a variable line number to the stack.",
+        params: "<line:variable>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                stack.push(variables[params[0]])
+                resolve("NONE")
+            })
+        }
+    },
+
+
     canvas: {
         desc: "Enables the canvas.",
         params: "",
@@ -459,16 +507,6 @@ const INSTRUCTION_LIST = {
             })
         }
     },
-    setcolrgbv: {
-        desc: "Sets the current pixel color to the values of three variables in RGB.",
-        params: "<red:variable> <green:variable> <blue:variable>",
-        run: (params, line) => {
-            return new Promise(resolve => {
-                ctx.fillStyle = "rgb(" + variables[params[0]] + ", " + variables[params[1]] + ", " + variables[params[2]] + ")"
-                resolve("NONE")
-            })
-        }
-    },
     setcolrgb: {
         desc: "Sets the current pixel color in RGB.",
         params: "<red:number> <green:number> <blue:number>",
@@ -479,12 +517,12 @@ const INSTRUCTION_LIST = {
             })
         }
     },
-    setcolhslv: {
-        desc: "Sets the current pixel color to the values of three variables in HSL.",
-        params: "<hue:variable> <saturation:variable> <lightness:variable>",
+    setcolrgbv: {
+        desc: "Sets the current pixel color to the values of three variables in RGB.",
+        params: "<red:variable> <green:variable> <blue:variable>",
         run: (params, line) => {
             return new Promise(resolve => {
-                ctx.fillStyle = "hsl(" + variables[params[0]] + ", " + variables[params[1]] + "%, " + variables[params[2]] + "%)"
+                ctx.fillStyle = "rgb(" + variables[params[0]] + ", " + variables[params[1]] + ", " + variables[params[2]] + ")"
                 resolve("NONE")
             })
         }
@@ -495,6 +533,16 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 ctx.fillStyle = "hsl(" + params[0] + ", " + params[1] + "%, " + params[2] + "%)"
+                resolve("NONE")
+            })
+        }
+    },
+    setcolhslv: {
+        desc: "Sets the current pixel color to the values of three variables in HSL.",
+        params: "<hue:variable> <saturation:variable> <lightness:variable>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.fillStyle = "hsl(" + variables[params[0]] + ", " + variables[params[1]] + "%, " + variables[params[2]] + "%)"
                 resolve("NONE")
             })
         }
@@ -623,7 +671,7 @@ const INSTRUCTION_GROUPS = [
 function jump(name)
 {
     let lineNum = 0
-    for (const line of instructions)
+    for (const line of instructions) // search thru instructions until subroutine name is found
     {
         if (line.startsWith("." + name))
         {
@@ -633,5 +681,7 @@ function jump(name)
         lineNum++
     }
 
-    return pointer
+    interpretError("ERR_SUBROUTINE")
+    runType = "stop" // stop execution
+    return -1
 }

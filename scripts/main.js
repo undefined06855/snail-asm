@@ -62,6 +62,7 @@ let list = document.getElementById("instructionList")
 let currentGroupId = 0
 for (const name of Object.keys(INSTRUCTION_LIST))
 {
+    // add spacer and new title if needed
     if (name == INSTRUCTION_GROUPS[currentGroupId].from)
     {
         list.appendChild(el`div.spacer`())
@@ -90,6 +91,22 @@ for (const name of Object.keys(INSTRUCTION_LIST))
     if (instr.params != "") nameel.appendChild(el`p.code`(instr.params))
 
     list.appendChild(el`p`(instr.desc))
+    if (name == "setc")
+    {
+        // add descriptions of values setc can be
+        let descriptionsWrapper = el`ul`()
+
+        for (let [descriptionName, description] of Object.entries(builtInVariableDescriptions))
+        {
+            descriptionsWrapper.appendChild(el`li`(
+                el`p.code`(descriptionName),
+                el`p.inline.font`(": " + description)
+            ))
+        }
+
+        list.appendChild(descriptionsWrapper)
+        
+    }
 
     list.appendChild(el`div.spacer`())
 }
