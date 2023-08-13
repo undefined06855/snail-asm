@@ -578,11 +578,34 @@ const INSTRUCTION_LIST = {
         }
     },
     rect: {
-        desc: "Draws a rectangle.",
+        desc: "Draws a rectangle (filled).",
         params: "<x:number> <y:number> <width:number> <height:number>",
         run: (params, line) => {
             return new Promise(resolve => {
                 ctx.fillRect(Number(params[0]), Number(params[1]), Number(params[2]), Number(params[3]))
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    orect: {
+        desc: "Draws a rectangle (outline).",
+        params: "<x:number> <y:number> <width:number> <height:number>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.strokeRect(Number(params[0]), Number(params[1]), Number(params[2]), Number(params[3]))
+                resolve("SCREENUPDATE")
+            })
+        }
+    },
+    line: {
+        desc: "Draws a line.",
+        params: "<x1:number> <y1:number> <x2:number> <y2:number>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                ctx.beginPath()
+                ctx.moveTo(Number(params[0]), Number(params[1]))
+                ctx.lineTo(Number(params[2]), Number(params[3]))
+                ctx.stroke()
                 resolve("SCREENUPDATE")
             })
         }
