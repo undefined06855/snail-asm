@@ -30,17 +30,30 @@ function startsWithAnyElement(str, lst) {
     return false;
 }
 
+// lzw lossless text compression algorithm
+// https://gist.github.com/JavaScript-Packer/bbf68a4dc0e1fd102221
+
+// encode
+function en(c){var x="charCodeAt",b,e={},f=c.split(""),d=[],a=f[0],g=256;for(b=1;b<f.length;b++)c=f[b],null!=e[a+c]?a+=c:(d.push(1<a.length?e[a]:a[x](0)),e[a+c]=g,g++,a=c);d.push(1<a.length?e[a]:a[x](0));for(b=0;b<d.length;b++)d[b]=String.fromCharCode(d[b]);return d.join("")}
+
+// decode
+function de(b){var a,e={},d=b.split(""),c=f=d[0],g=[c],h=o=256;for(b=1;b<d.length;b++)a=d[b].charCodeAt(0),a=h>a?d[b]:e[a]?e[a]:f+c,g.push(a),c=a.charAt(0),e[o]=f+c,o++,f=a;return g.join("")}
+
 function downloadFile()
 {
-    const startFileName = prompt("Filename:")
-    if (startFileName !== null)
+    const initialName = prompt("Filename:")
+    if (initialName !== null)
     {
-        const fileName = startFileName + ".snail";
+        const fileName = initialName + ".snail";
 
         window.URL = window.URL || window.webkitURL;
         const dlBtn = document.createElement("a");
     
-        dlBtn.setAttribute("href", window.URL.createObjectURL(new Blob([textarea.value], {type: 'text/plain'})));
+        dlBtn.setAttribute("href", window.URL.createObjectURL(new Blob([(
+              VERSION
+            + "\n"
+            + en(textarea.value)
+        )], {type: 'text/plain'})));
         dlBtn.setAttribute("download", fileName);
     
         document.body.appendChild(dlBtn)
@@ -59,7 +72,12 @@ function importFile() {
         const reader = new FileReader();
 
         reader.addEventListener('load', function() {
-            textarea.value = reader.result;
+            let [version, ...content] = reader.result.split("\n")
+            let loadOld = true
+
+            if (Number(version) < Number(VERSION)) loadOld = prompt("This script was made for an older version of snail. Load anyway?")
+            
+            if (loadOld) textarea.value = de(content.join("\n"));
         });
 
         reader.readAsText(file);
@@ -123,7 +141,7 @@ function resetVars()
         time: null,
         pointer: null,
         stacklen: null,
-        variableslength: null
+        variableslen: null
     })
 
     pointer = 0

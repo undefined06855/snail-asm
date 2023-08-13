@@ -37,7 +37,10 @@ function cycle()
         let instructionFull = instructions[pointer].split(" ")
         let instruction = instructionFull[0]
         let params = instructionFull.splice(1)
-    
+        // the lines 40 - 100 are a mess but they work i guess
+        // would highly reccomend closing the following region
+
+        //#region shit
         if (!(instruction.startsWith(".") || instruction.startsWith(";") || INSTRUCTION_LIST[instruction] === undefined))
         {
             INSTRUCTION_LIST[instruction]
@@ -48,7 +51,7 @@ function cycle()
                 builtInVariables.pointer ? variables[builtInVariables.pointer] = pointer                          : ""
                 builtInVariables.time ? variables[builtInVariables.time] = Date.now() - startTime                 : ""
                 builtInVariables.stacklen ? variables[builtInVariables.stacklen] = stack.length                   : ""
-                builtInVariables.variablesLength ? variables[builtInVariables.variablesLength] = variables.length : ""
+                builtInVariables.variableslen ? variables[builtInVariables.variableslen] = variables.length : ""
 
                 // error handling is done by the instruction, only the EOF error is handled by the cycle function
 
@@ -94,6 +97,7 @@ function cycle()
             if (fast) cycle()
             else requestAnimationFrame(cycle)
         }
+        //#endregion
     }
 }
 
@@ -110,3 +114,5 @@ function interpretError(errorCode)
     document.getElementById("runbtn").disabled = false
     document.getElementById("stopbtn").disabled = true
 }
+
+

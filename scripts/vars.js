@@ -1,44 +1,48 @@
 const textarea = document.querySelector("textarea")
     , aside = document.querySelector("aside")
 
-    , tabSize = 4
+    , tabSize = 2
 
-let lineCount = 1
+const VERSION = "1.6"
+document.querySelector("title").innerText += " " + VERSION
 
-let variables = {}
-  , pointer = 0
-  , stack = []
-  , instructions = textarea.value.split("\n")
-  , loadedVar = ""
-  , currentPauseId = -1
+let variables = {} // object with variables in
+  , pointer = 0 // current line being executed
+  , stack = [] // stack
+  , instructions = textarea.value.split("\n") // array with all of the instructions in
+  , loadedVar = "" // currently loaded var's name
+  , currentPauseId = -1 // used by pse to put the timeout id in
 
-  , stoppedTimer = false
+  , stoppedTimer = false // has used endtimer yet?
 
-  , runType = "normal"
-  , fast = false
-  , interpreting = false
+  , runType = "normal" // run type (normal / stop)
+  , fast = false // is fast mode on?
+  , interpreting = false // is currently running?
 
-  , canvas = document.querySelector("canvas")
-  , ctx = canvas.getContext("2d")
+  , canvas = document.querySelector("canvas") // canvas element
+  , ctx = canvas.getContext("2d") // canvas context
 
-  , builtInVariables = {
+  , builtInVariables = { // all built in variables (null gets changed to the variable name)
       key: null,
       time: null,
       pointer: null,
       stacklen: null,
-      variablesLength: null
+      variableslen: null
   }
-  , builtInVariableDescriptions = {
+  , builtInVariableDescriptions = { // descriptions
     key: "The last key that was pressed on the keyboard, as a keycode.",
-    time: "The current millisecond of program execution",
-    pointer: "The program "
+    time: "The current millisecond of program execution.",
+    pointer: "The program pointer (the current line being executed).",
+    stacklen: "The length of the stack.",
+    variableslen: "How many variables have been set a value."
   }
 
-  , startTime = 0
-  , endTime = 0
-
-  , instructionMenuOpen = false
-  , errorCodes = {
+  , startTime = 0 // program start time
+  , endTime = 0 //   "     " end time
+ 
+  , instructionMenuOpen = false // is instructions menu open?
+  , errorCodes = { // error codes
     ERR_EOF: "UNEXPECTED EOF WHILE RUNNING",
-    ERR_STACK: "STACK EMPTY WHEN RTS INSTRUCTION CALLED"
+    ERR_STACK: "STACK EMPTY WHEN RTS INSTRUCTION CALLED",
+    ERR_SUBROUTINE: "SUBROUTINE NOT FOUND"
   }

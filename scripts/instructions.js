@@ -71,7 +71,7 @@ const INSTRUCTION_LIST = {
         }
     },
     setc: {
-        desc: "Sets the currently loaded variable to be a built in value which updates every instruction.",
+        desc: "Sets the currently loaded variable to be a built in value which updates every instruction.\nThe possible values can be:",
         params: "<builtinvalue:string>",
         run: (params, line) => {
             return new Promise(resolve => {
@@ -111,7 +111,7 @@ const INSTRUCTION_LIST = {
         }
     },
     upd: {
-        desc: "Updates the window. Only used in fast mode, see the fast instruction.",
+        desc: "Updates the window. Only used in fast mode, see the fast instruction for more information.",
         params: "",
         run: (params, line) => {
             return new Promise(resolve => {
@@ -132,6 +132,8 @@ const INSTRUCTION_LIST = {
             })
         }
     },
+
+
     set: {
         desc: "Sets the loaded variable to a value.",
         params: "<value:number>",
@@ -248,6 +250,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.round(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
@@ -257,6 +260,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.floor(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
@@ -266,6 +270,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.floor(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
@@ -275,6 +280,7 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.sqrt(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
@@ -284,9 +290,12 @@ const INSTRUCTION_LIST = {
         run: (params, line) => {
             return new Promise(resolve => {
                 variables[loadedVar] = Math.abs(variables[loadedVar])
+                resolve("VARCHANGE")
             })
         }
     },
+
+
     jmp: {
         desc: "Jumps to another part of the code.",
         params: "<routine:subroutine>",
@@ -399,7 +408,8 @@ const INSTRUCTION_LIST = {
             return new Promise(resolve => {
                 if (stack.length == 0) 
                 {
-                    // error somehow
+                    interpretError("ERR_STACK")
+                    resolve("END")
                 }
                 pointer = stack[stack.length - 1]
                 stack.pop()
@@ -407,6 +417,8 @@ const INSTRUCTION_LIST = {
             })
         }
     },
+
+
     canvas: {
         desc: "Enables the canvas.",
         params: "",
@@ -623,7 +635,7 @@ const INSTRUCTION_GROUPS = [
 function jump(name)
 {
     let lineNum = 0
-    for (const line of instructions)
+    for (const line of instructions) // search thru instructions until subroutine name is found
     {
         if (line.startsWith("." + name))
         {
@@ -633,5 +645,7 @@ function jump(name)
         lineNum++
     }
 
-    return pointer
+    interpretError("ERR_SUBROUTINE")
+    runType = "stop" // stop execution
+    return -1
 }
