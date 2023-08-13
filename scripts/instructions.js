@@ -673,7 +673,7 @@ function jump(name)
     let lineNum = 0
     for (const line of instructions) // search thru instructions until subroutine name is found
     {
-        if (line.startsWith("." + name))
+        if (line == "." + name)
         {
             return lineNum - 1
         }
