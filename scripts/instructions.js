@@ -14,6 +14,16 @@ const INSTRUCTION_LIST = {
         params: "",
         run: (params, line) => {
             return new Promise(resolve => {
+                resolve("NONE") // immediately resolve
+            })
+        }
+    },
+    js: {
+        desc: "Executes custom javascript code. ",
+        params: "...<code:string>",
+        run: (params, line) => {
+            return new Promise(resolve => {
+                eval(params.join(" ")) // evaluate javascript
                 resolve("NONE")
             })
         }
