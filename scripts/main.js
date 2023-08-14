@@ -1,45 +1,57 @@
 textarea.addEventListener("keydown", event => {
     // typing helper
-    if (!event.repeat)
+
+    // ctrl+x and user isnt selecting anything, delete current line
+    if (event.code == "KeyX" && event.ctrlKey && document.getSelection().toString() == "")
     {
-        if (event.code == "Enter")
+        navigator.clipboard.writeText(getCurrentLineContents() + "\n")
+        let position = getCursorPosition()
+        removeLine(getCursorLine())
+        setCursor(position)
+
+        event.preventDefault()
+    }
+
+    if (event.code == "Tab" && !event.shiftKey)
+    {
+        autoType(" ".repeat(tabSize))
+
+        event.preventDefault()
+    }
+
+    if (event.repeat) return // if statements after this line do not get triggered on repeat
+
+    if (event.code == "Enter")
+    {
+        const exitKeywords = ["rts", "jmp", "end"]
+
+        if (getCurrentLineContents().charAt(0) == ".")
         {
-            const exitKeywords = ["rts", "jmp", "end"]
-
-            if (getLastLineUserWasOn().charAt(0) == ".")
-            {
-                // just typed a subroutine char or something
-                autoType("\n")
-                autoType(" ".repeat(tabSize))
-    
-                event.preventDefault()
-            }
-            else if (startsWithAnyElement(getLastLineUserWasOn(), exitKeywords))
-            {
-                // exited from subroutine - dont type the spaces!
-
-                // i might use this later so ill keep it just in case
-            }
-            else if (getLastLineUserWasOn().substring(0, tabSize) == " ".repeat(tabSize))
-            {
-                // currently typing in a subroutine or something
-                autoType("\n")
-                autoType(" ".repeat(tabSize))
-    
-                event.preventDefault()
-            }
-        }
-
-        else if (event.code == "Tab" && !event.shiftKey)
-        {
-            event.preventDefault()
+            // just typed a subroutine char or something
+            autoType("\n")
             autoType(" ".repeat(tabSize))
+
+            event.preventDefault()
+        }
+        else if (startsWithAnyElement(getCurrentLineContents(), exitKeywords))
+        {
+            // exited from subroutine - dont type the spaces!
+
+            // i might use this later so ill keep it just in case
+        }
+        else if (getCurrentLineContents().substring(0, tabSize) == " ".repeat(tabSize))
+        {
+            // currently typing in a subroutine or something
+            autoType("\n")
+            autoType(" ".repeat(tabSize))
+
+            event.preventDefault()
         }
     }
 })
 
 document.addEventListener("keydown", event => {
-    if (event.repeat) return // trying to implement things like this
+    if (event.repeat) return // trying to implement things like this more often
         
     if (event.code == "Escape")
     {
@@ -56,6 +68,8 @@ document.addEventListener("keydown", event => {
         startInterpret()
     }
 })
+
+
 
 let list = document.getElementById("instructionList")
 

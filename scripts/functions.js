@@ -1,8 +1,31 @@
 // chatGPT
-function getLastLineUserWasOn() {
-    var lines = textarea.value.split('\n');
-    return lines[textarea.value.substring(0, textarea.selectionStart).split("\n").length - 1];
+function getCurrentLineContents() {
+    let lines = textarea.value.split("\n");
+    return lines[getCursorLine()];
 }
+
+function removeLine(line)
+{
+    let lines = textarea.value.split("\n")
+    lines.splice(line, 1)
+    textarea.value = lines.join("\n")
+}
+
+function getCursorLine()
+{
+    return (textarea.value.substring(0, textarea.selectionStart).split("\n").length) - 1
+}
+
+function getCursorPosition()
+{
+    return textarea.selectionStart
+}
+
+function setCursor(line)
+{
+    textarea.setSelectionRange(line, line, "none")
+}
+
 
 // chatGPT
 function autoType(text) {
