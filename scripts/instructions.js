@@ -101,7 +101,7 @@ const INSTRUCTION_LIST = {
         }
     },
     fast: {
-        desc: "Switches the program to fast mode, which runs every instruction without causing a new frame. Make sure to include upd instructions, else your program may freeze!",
+        desc: "Switches the program to fast mode, which runs every instruction without refreshing the screen. Make sure to include upd instructions, else your program may freeze!",
         params: "",
         run: (params, line) => {
             return new Promise(resolve => {
@@ -111,7 +111,7 @@ const INSTRUCTION_LIST = {
         }
     },
     upd: {
-        desc: "Updates the window. Only used in fast mode, see the fast instruction for more information.",
+        desc: "Refreshes the window. Only used in fast mode, see the fast instruction for more information.",
         params: "",
         run: (params, line) => {
             return new Promise(resolve => {
