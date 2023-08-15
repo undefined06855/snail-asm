@@ -36,14 +36,16 @@ textarea.addEventListener("keydown", event => {
         }
         else if (startsWithAnyElement(getCurrentLineContents(), exitKeywords))
         {
-            // exited from subroutine - type spaces but like dont at the same time idk
-            let prevLineTabSize = getCurrentLineContents(-1).search(/\S/)
-            let thisLineTabSize;
-            if (prevLineTabSize - user.tabSize < 0) thisLineTabSize = 0
-            else                                    thisLineTabSize = prevLineTabSize - user.tabSize
+            // exited from subroutine - type spaces snapped to the increments
+            let thisLineTabSize = getCurrentLineContents().search(/\S/)
+            let newLineTabSize
             
+            if (thisLineTabSize - user.tabSize <= 0) newLineTabSize = 0
+            else                                     newLineTabSize = snapToIncrement(thisLineTabSize - user.tabSize, user.tabSize) // snap new tab size to increments of 2 or 4
+
             autoType("\n")
-            autoType(" ".repeat())
+            autoType(" ".repeat(newLineTabSize))
+            event.preventDefault()
         }
         else if (getCurrentLineContents().match(/^ +/i)) // match any amount of whitespace before the string
         {

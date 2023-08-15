@@ -26,6 +26,12 @@ function setCursor(line)
     textarea.setSelectionRange(line, line, "none")
 }
 
+// https://gist.github.com/mattlundstrom/bcfe5cf14f7ae965ce2d27aa68662991
+// (modified)
+function snapToIncrement( val, inc ){
+    return Math.floor(val / inc) * inc;
+}
+
 // chatGPT
 function autoType(text) {
     const pos = textarea.selectionStart;
