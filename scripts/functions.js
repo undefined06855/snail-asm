@@ -1,7 +1,7 @@
 // chatGPT
-function getCurrentLineContents() {
+function getCurrentLineContents(offset = 0) {
     let lines = textarea.value.split("\n");
-    return lines[getCursorLine()];
+    return lines[getCursorLine() + offset];
 }
 
 function removeLine(line)
@@ -25,7 +25,6 @@ function setCursor(line)
 {
     textarea.setSelectionRange(line, line, "none")
 }
-
 
 // chatGPT
 function autoType(text) {

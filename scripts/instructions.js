@@ -19,7 +19,7 @@ const INSTRUCTION_LIST = {
         }
     },
     js: {
-        desc: "Executes custom javascript code. ",
+        desc: "[warn]Executes custom javascript code.",
         params: "...<code:string>",
         run: (params, line) => {
             return new Promise(resolve => {

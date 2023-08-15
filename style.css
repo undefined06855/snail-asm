@@ -79,7 +79,7 @@ textarea:focus, textarea, textarea:focus-visible, textarea:focus-within {
     border-radius: 0px;
 }
 
-button {
+button, .side {
     font-size: 16px;
     width: 70%;
     padding: 3px;
@@ -87,10 +87,20 @@ button {
     display: flex;
     justify-content: center;
     align-items: center;
+}
 
+button {
     background-color: rgb(50, 50, 50);
 
     cursor: pointer;
+}
+
+input.onedigit {
+    width: 1ch;
+}
+
+input.seamless {
+    background-color: transparent;
 }
 
 .normalbtn {
@@ -187,6 +197,12 @@ h1 {
 
 p {
     font-size: medium;
+}
+
+.warning::after {
+    content: " Warning: Running custom javascript code that causes an error will freeze the webpage!";
+    color: red;
+    font-weight: bold;
 }
 
 .exitBtn {

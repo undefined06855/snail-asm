@@ -12,7 +12,7 @@ function startInterpret()
         if (instructions[id] == "" || instructions[id].startsWith(";"))
         {
             instructions.splice(id, 1)
-            id -= 1 // bad practice butttttt
+            id -= 1 // bad practice to modify the for loop variable butttttt
         }
     }
 
@@ -37,8 +37,8 @@ function cycle()
         let instructionFull = instructions[pointer].split(" ")
         let instruction = instructionFull[0]
         let params = instructionFull.splice(1)
-        // the lines 40 - 100 are a mess but they work i guess
-        // would highly reccomend closing the following region
+        // the lines 43 - 115 are a mess but they work i guess
+        // would highly recommend closing the following region
 
         //#region shit
         if (!(instruction.startsWith(".") || instruction.startsWith(";") || INSTRUCTION_LIST[instruction] === undefined))
@@ -81,6 +81,20 @@ function cycle()
                 else if (runType == "normal" && fast) cycle()
                 else if (runType == "normal" && !fast) requestAnimationFrame(cycle)
             })
+            .catch(err => {
+                if (instruction == "js")
+                {
+                    // you did something wrong >:(
+                    interpretError("ERR_JAVASCRIPT")
+                }
+                else
+                {
+                    // its probably my bad code
+                    let errorCode = `ERR_${btoa(err)}|${instruction} ${params.join(" ")}#`
+                    navigator.clipboard.writeText(errorCode)
+                    alert("Something has gone terribly wrong! Please report this as a bug, sending in the code [ERR_CODE], which has been copied to your clipboard.".replace("[ERR_CODE]", errorCode))
+                }
+            })
         }
         else if (INSTRUCTION_LIST[instruction] === undefined && !(instruction.startsWith(".")))
         {
@@ -111,7 +125,9 @@ document.addEventListener("keydown", event => {
 function interpretError(errorCode)
 {
     logTop(errorCodes[errorCode])
-    resetVars()
+    runType = "stop"
+    interpreting = false
     document.getElementById("runbtn").disabled = false
     document.getElementById("stopbtn").disabled = true
+    canvas.style.display = "none"
 }
